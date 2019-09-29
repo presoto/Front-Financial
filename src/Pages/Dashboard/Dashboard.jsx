@@ -35,7 +35,6 @@ class Dashboard extends React.Component {
             <Tab icon={<GraphicEq />} label="Analíse" />
           </Tabs>
         </div>
-      
       </div>
     )
 
