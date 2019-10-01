@@ -44,7 +44,7 @@ class Dashboard extends React.Component {
     if (date <= 12) {
       this.setState({ salutation: 'Bom dia' });
     }
-    if (date < 18) {
+    if (date > 12 && date < 18) {
       this.setState({ salutation: 'Boa tarde' });
     }
     if (date >= 18) {
@@ -70,11 +70,13 @@ class Dashboard extends React.Component {
               <Avatar alt={this.state.userName} src={avatarPicture} classes={{ root: `${css.HU__Picture}` }} />
             </div>
             <div className={css.C__Wallet}>
-              <h2>{this.state.wallet[0].name}</h2>
-              <h4>R$ 1250</h4>
-              <p>ultimos 30 dias</p>
-              <p>Entradas: R$1450</p>
-              <p>Despesas: R$200</p>
+              <h2 className={css.CW__Name}>{this.state.wallet[0].name}</h2>
+              <h4 className={css.CW__Value}>R$ 1250</h4>
+              <p className={css.CW__Lastdays}>ultimos 30 dias</p>
+              <div className={css.CW__Movement}>
+                <p className={css.CW__InputValues} >Entradas: R$1450</p>
+                <p className={css.CW__OutputValues}>Despesas: R$200</p>
+              </div>
             </div>
           </div>
         </TabPanel>
@@ -92,9 +94,9 @@ class Dashboard extends React.Component {
             indicatorColor="secondary"
             textColor="secondary"
           >
-            <Tab icon={<Home />} label="Inicio" />
-            <Tab icon={<List />} label="Recentes" />
-            <Tab icon={<GraphicEq />} label="Analíse" />
+            <Tab icon={<Home />} label="Inicio" classes={{ root: `${css.CT__Itens}`}}/>
+            <Tab icon={<List />} label="Recentes"classes={{ root: `${css.CT__Itens}`}} />
+            <Tab icon={<GraphicEq />} label="Analíse" classes={{ root: `${css.CT__Itens}`}}/>
           </Tabs>
         </div>
       </div>
