@@ -1,10 +1,76 @@
 import React from 'react';
 
-import { Tabs, Tab, Typography, Box, Avatar } from '@material-ui/core';
-import { Home, List, GraphicEq } from '@material-ui/icons';
+import {
+  Tabs,
+  Tab,
+  Typography,
+  Box,
+  Avatar,
+  Fab,
+  Dialog,
+  DialogTitle,
+  ListItem,
+  ListItemAvatar,
+  ListItemText,
+} from '@material-ui/core';
+import ListCore from '@material-ui/core/List';
+
+import {
+  Home,
+  List,
+  GraphicEq,
+  Add,
+  CreditCard,
+  Remove
+} from '@material-ui/icons';
 
 import avatarPicture from './../../Assets/Images/user.png';
 import css from './Dashboard.module.sass';
+
+
+function SimpleDialog(props) {
+  const { onClose, selectedValue, open } = props;
+
+  const handleClose = () => {
+    onClose(selectedValue);
+  };
+
+  const handleListItemClick = value => {
+    onClose(value);
+  };
+
+  return (
+    <Dialog onClose={handleClose} aria-labelledby="simple-dialog-title" open={open}>
+      <DialogTitle id="simple-dialog-title">Oque vamos adicionar ?</DialogTitle>
+      <ListCore>
+        <ListItem button onClick={() => handleListItemClick('addAccount')}>
+          <ListItemAvatar>
+            <Avatar>
+              <CreditCard />
+            </Avatar>
+          </ListItemAvatar>
+          <ListItemText primary="Nova carteira" />
+        </ListItem>
+        <ListItem button onClick={() => handleListItemClick('addAccount')}>
+          <ListItemAvatar>
+            <Avatar>
+              <Add color="primary" />
+            </Avatar>
+          </ListItemAvatar>
+          <ListItemText primary="Receita" />
+        </ListItem>
+        <ListItem button onClick={() => handleListItemClick('addAccount')}>
+          <ListItemAvatar>
+            <Avatar>
+              <Remove color="error" />
+            </Avatar>
+          </ListItemAvatar>
+          <ListItemText color="red" primary="Despesa" />
+        </ListItem>
+      </ListCore>
+    </Dialog>
+  );
+}
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -31,6 +97,9 @@ class Dashboard extends React.Component {
       userName: 'Gabriel',
       wallet: [{ name: 'santander', value: 550 }, { name: 'nubank', value: -200 }],
       valueTab: 0,
+      open: false,
+      selectedValue: false
+
     }
   }
 
@@ -57,7 +126,15 @@ class Dashboard extends React.Component {
     this.setState({ valueTab: newValue });
   };
 
+
   render() {
+    const handleClickOpen = () => {
+      this.setState({ open: true })
+    };
+    const handleClose = value => {
+      this.setState({ open: false, selectedValue: value })
+    };
+
     return (
       <div className={css.Container} >
         <TabPanel value={this.state.valueTab} index={0}>
@@ -78,6 +155,12 @@ class Dashboard extends React.Component {
                 <p className={css.CW__OutputValues}>Despesas: R$200</p>
               </div>
             </div>
+            <div className={css.C__Add}>
+              <Fab color="primary" aria-label="add" onClick={handleClickOpen} >
+                <Add />
+              </Fab>
+            </div>
+            <SimpleDialog selectedValue={this.state.selectedValue} open={this.state.open} onClose={handleClose} />
           </div>
         </TabPanel>
         <TabPanel value={this.state.valueTab} index={1}>
@@ -94,14 +177,13 @@ class Dashboard extends React.Component {
             indicatorColor="secondary"
             textColor="secondary"
           >
-            <Tab icon={<Home />} label="Inicio" classes={{ root: `${css.CT__Itens}`}}/>
-            <Tab icon={<List />} label="Recentes"classes={{ root: `${css.CT__Itens}`}} />
-            <Tab icon={<GraphicEq />} label="Analíse" classes={{ root: `${css.CT__Itens}`}}/>
+            <Tab icon={<Home />} label="Inicio" classes={{ root: `${css.CT__Itens}` }} />
+            <Tab icon={<List />} label="Recentes" classes={{ root: `${css.CT__Itens}` }} />
+            <Tab icon={<GraphicEq />} label="Analíse" classes={{ root: `${css.CT__Itens}` }} />
           </Tabs>
         </div>
       </div>
     )
-
   }
 }
 export default Dashboard;
