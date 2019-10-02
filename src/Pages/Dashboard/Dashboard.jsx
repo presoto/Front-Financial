@@ -42,7 +42,7 @@ function SimpleDialog(props) {
   return (
     <Dialog onClose={handleClose} aria-labelledby="simple-dialog-title" open={open}>
       <DialogTitle id="simple-dialog-title">Oque vamos adicionar ?</DialogTitle>
-      <ListCore>
+      <ListCore classes={{ root: `${css.ListCore}` }}>
         <ListItem button onClick={() => handleListItemClick('addAccount')}>
           <ListItemAvatar>
             <Avatar>
