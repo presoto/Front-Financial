@@ -1,5 +1,5 @@
 import React from 'react';
-
+import RetangleInfo from '../../Components/RetangleInfo/RetangleInfo'
 import {
   Tabs,
   Tab,
@@ -41,7 +41,7 @@ function SimpleDialog(props) {
 
   return (
     <Dialog onClose={handleClose} aria-labelledby="simple-dialog-title" open={open}>
-      <DialogTitle  classes={{ root: `${css.ListCore}` }} id="simple-dialog-title">Oque vamos adicionar ?</DialogTitle>
+      <DialogTitle classes={{ root: `${css.ListCore}` }} id="simple-dialog-title">Oque vamos adicionar ?</DialogTitle>
       <ListCore classes={{ root: `${css.ListCore}` }}>
         <ListItem button onClick={() => handleListItemClick('addAccount')}>
           <ListItemAvatar>
@@ -164,7 +164,7 @@ class Dashboard extends React.Component {
           </div>
         </TabPanel>
         <TabPanel value={this.state.valueTab} index={1}>
-          Calma Claudio, aqui ainda não tem nada ...
+          <RetangleInfo />
         </TabPanel>
         <TabPanel value={this.state.valueTab} index={2}>
           Nem aqui
@@ -173,6 +173,7 @@ class Dashboard extends React.Component {
           <Tabs
             value={this.state.valueTab}
             onChange={this.handleChangeTab}
+            classes={{ root: `${css.CT__Container}` }}
             variant="fullWidth"
             indicatorColor="secondary"
             textColor="secondary"
