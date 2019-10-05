@@ -14,7 +14,7 @@ import {
   ListItemText,
 } from '@material-ui/core';
 import ListCore from '@material-ui/core/List';
-
+import { Redirect } from 'react-router-dom'
 import {
   Home,
   List,
@@ -27,68 +27,6 @@ import {
 import avatarPicture from './../../Assets/Images/user.png';
 import css from './Dashboard.module.sass';
 
-
-function SimpleDialog(props) {
-  const { onClose, selectedValue, open } = props;
-
-  const handleClose = () => {
-    onClose(selectedValue);
-  };
-
-  const handleListItemClick = value => {
-    onClose(value);
-  };
-
-  return (
-    <Dialog onClose={handleClose} aria-labelledby="simple-dialog-title" open={open}>
-      <DialogTitle classes={{ root: `${css.ListCore}` }} id="simple-dialog-title">Oque vamos adicionar ?</DialogTitle>
-      <ListCore classes={{ root: `${css.ListCore}` }}>
-        <ListItem button onClick={() => handleListItemClick('addAccount')}>
-          <ListItemAvatar>
-            <Avatar>
-              <CreditCard />
-            </Avatar>
-          </ListItemAvatar>
-          <ListItemText primary="Nova carteira" />
-        </ListItem>
-        <ListItem button onClick={() => handleListItemClick('addAccount')}>
-          <ListItemAvatar>
-            <Avatar>
-              <Add color="primary" />
-            </Avatar>
-          </ListItemAvatar>
-          <ListItemText primary="Receita" />
-        </ListItem>
-        <ListItem button onClick={() => handleListItemClick('addAccount')}>
-          <ListItemAvatar>
-            <Avatar>
-              <Remove color="error" />
-            </Avatar>
-          </ListItemAvatar>
-          <ListItemText color="red" primary="Despesa" />
-        </ListItem>
-      </ListCore>
-    </Dialog>
-  );
-}
-
-function TabPanel(props) {
-  const { children, value, index, ...other } = props;
-
-  return (
-    <Typography
-      component="div"
-      role="tabpanel"
-      hidden={value !== index}
-      id={`simple-tabpanel-${index}`}
-      aria-labelledby={`simple-tab-${index}`}
-      {...other}
-    >
-      <Box p={3}>{children}</Box>
-    </Typography>
-  );
-}
-
 class Dashboard extends React.Component {
   constructor(props) {
     super(props)
@@ -98,14 +36,21 @@ class Dashboard extends React.Component {
       wallet: [{ name: 'santander', value: 550 }, { name: 'nubank', value: -200 }],
       valueTab: 0,
       open: false,
-      selectedValue: false
-
+      selectedValue: false,
+      redirect: false,
+      params: ''
     }
-  }
+  };
+
+  renderRedirect = () => {
+    if (this.state.redirect) {
+      return <Redirect to={`/transaction/${this.state.params}`} />
+    }
+  };
 
   componentDidMount() {
     this.getSalutation();
-  }
+  };
 
   getSalutation() {
     const date = new Date().getHours();
@@ -120,23 +65,94 @@ class Dashboard extends React.Component {
       this.setState({ salutation: 'Boa noite' });
     }
 
-  }
+  };
 
   handleChangeTab = (event, newValue) => {
     this.setState({ valueTab: newValue });
   };
 
+  handleClickOpen = () => {
+    this.setState({ open: true })
+  };
+
+  handleClose = value => {
+    this.setState({ open: false, selectedValue: value })
+  };
+
+  handleRedirect = value => {
+    this.setState({ params: value, redirect: true })
+  };
 
   render() {
-    const handleClickOpen = () => {
-      this.setState({ open: true })
+    function SimpleDialog(props) {
+      const { onClose, selectedValue, open, redirect } = props;
+
+      const handleClose = () => {
+        onClose(selectedValue);
+      };
+
+      const handleListItemClick = value => {
+        if (value === 'addWallet') {
+          redirect(value)
+        };
+
+        onClose(value);
+      };
+
+
+      return (
+        <Dialog onClose={handleClose} aria-labelledby="simple-dialog-title" open={open}>
+          <DialogTitle classes={{ root: `${css.ListCore}` }} id="simple-dialog-title">Oque vamos adicionar ?</DialogTitle>
+          <ListCore classes={{ root: `${css.ListCore}` }}>
+            <ListItem button onClick={() => handleListItemClick('addWallet')}>
+              <ListItemAvatar>
+                <Avatar>
+                  <CreditCard />
+                </Avatar>
+              </ListItemAvatar>
+              <ListItemText primary="Nova carteira" />
+            </ListItem>
+            <ListItem button onClick={() => handleListItemClick('addActive')}>
+              <ListItemAvatar>
+                <Avatar>
+                  <Add color="primary" />
+                </Avatar>
+              </ListItemAvatar>
+              <ListItemText primary="Receita" />
+            </ListItem>
+            <ListItem button onClick={() => handleListItemClick('addPassive')}>
+              <ListItemAvatar>
+                <Avatar>
+                  <Remove color="error" />
+                </Avatar>
+              </ListItemAvatar>
+              <ListItemText color="red" primary="Despesa" />
+            </ListItem>
+          </ListCore>
+        </Dialog>
+      );
     };
-    const handleClose = value => {
-      this.setState({ open: false, selectedValue: value })
+
+    function TabPanel(props) {
+      const { children, value, index, ...other } = props;
+
+      return (
+        <Typography
+          component="div"
+          role="tabpanel"
+          hidden={value !== index}
+          id={`simple-tabpanel-${index}`}
+          aria-labelledby={`simple-tab-${index}`}
+          {...other}
+        >
+          <Box p={3}>{children}</Box>
+        </Typography>
+      );
     };
 
     return (
       <div className={css.Container} >
+        {this.renderRedirect()}
         <TabPanel value={this.state.valueTab} index={0}>
           <div className={css.Home}>
             <div className={css.H__User}>
@@ -156,11 +172,16 @@ class Dashboard extends React.Component {
               </div>
             </div>
             <div className={css.C__Add}>
-              <Fab color="primary" aria-label="add" onClick={handleClickOpen} >
+              <Fab color="primary" aria-label="add" onClick={this.handleClickOpen} >
                 <Add />
               </Fab>
             </div>
-            <SimpleDialog selectedValue={this.state.selectedValue} open={this.state.open} onClose={handleClose} />
+            <SimpleDialog
+              selectedValue={this.state.selectedValue}
+              open={this.state.open}
+              redirect={this.handleRedirect}
+              onClose={this.handleClose}
+            />
           </div>
         </TabPanel>
         <TabPanel value={this.state.valueTab} index={1}>
@@ -184,7 +205,7 @@ class Dashboard extends React.Component {
           </Tabs>
         </div>
       </div>
-    )
-  }
+    );
+  };
 }
 export default Dashboard;
