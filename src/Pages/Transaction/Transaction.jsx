@@ -1,5 +1,6 @@
 import React from 'react';
 import { Button } from '@material-ui/core';
+import Wallet from './Types/Wallet/Wallet';
 import { Close, Check } from '@material-ui/icons';
 
 import css from './Transaction.module.sass';
@@ -17,9 +18,11 @@ class Transaction extends React.Component {
   }
 
   render() {
-    console.log(this.state.params)
     return (
       <div className={css.Container}>
+        {this.state.params.param === 'addWallet' &&
+          <Wallet />
+        }
         <div className={css.C__Footer}>
           <Button
             color="primary"
