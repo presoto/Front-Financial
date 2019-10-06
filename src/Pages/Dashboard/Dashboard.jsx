@@ -14,7 +14,7 @@ import {
   ListItemText,
 } from '@material-ui/core';
 import ListCore from '@material-ui/core/List';
-import { Redirect } from 'react-router-dom'
+import { Redirect } from 'react-router-dom';
 import {
   Home,
   List,

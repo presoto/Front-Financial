@@ -1,4 +1,5 @@
 import React from 'react';
+import { Redirect } from 'react-router-dom';
 import { Button } from '@material-ui/core';
 import Wallet from './Types/Wallet/Wallet';
 import { Close, Check } from '@material-ui/icons';
@@ -14,12 +15,21 @@ class Transaction extends React.Component {
       date: '28/08/2019',
       recurrence: 0,
       params: this.props.match.params,
+      redirect: false,
     }
   }
+
+  renderRedirect = () => {
+    if (this.state.redirect) {
+      return <Redirect to="/dashboard" />
+    }
+  };
+
 
   render() {
     return (
       <div className={css.Container}>
+        {this.renderRedirect()}
         {this.state.params.param === 'addWallet' &&
           <Wallet />
         }
@@ -35,6 +45,7 @@ class Transaction extends React.Component {
             className={css.CF__ButtonCancel}
             color="secondary"
             variant="contained"
+            onClick={() => this.setState({redirect: true})}
           >
             <Close /> Cancelar
           </Button>

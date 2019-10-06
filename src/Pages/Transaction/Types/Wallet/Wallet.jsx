@@ -8,7 +8,7 @@ class Wallet extends React.Component {
     super(props)
     this.state = {
       name: '',
-      valueInitial: 0
+      valueInitial: ''
     };
   };
 
@@ -19,17 +19,17 @@ class Wallet extends React.Component {
           <TextField
             label="Nome da carteira"
             className={css.C__Text}
-            // value={values.name}
-            // onChange={handleChange('name')}
+            value={this.state.name}
+            onChange={(e) => this.setState({name: e.target.value})}
             margin="normal"
             variant="outlined"
           />
             <TextField
             type="number"
-            label="Valor inicial"
+            label="Valor inicial R$"
             className={css.C__Text}
-            // value={values.name}
-            // onChange={handleChange('name')}
+            value={this.state.valueInitial}
+            onChange={(e) => this.setState({valueInitial: e.target.value})}
             margin="normal"
             variant="outlined"
           />
