@@ -13,7 +13,7 @@ class Activity extends React.Component {
       type: '',
       name: '',
       date: '',
-      recurrence: '',
+      recurrence: 1,
       category: [],
       value: '',
       wallet: [],
@@ -81,20 +81,14 @@ class Activity extends React.Component {
         </TextField>
         {this.props.type === 'addPassive' &&
           <TextField
-            select
-            className={css.C__Text}
-            margin="normal"
-            variant="outlined"
-            // value={this.state.customerType}
-            // onChange={this.handleChange}
-            label="Parcelas"
-          >
-            {/* {this.state.customerList.map((state: { id?: number, description?: string }) => (
-            <MenuItem key={state.id} value={state.id}>
-              {state.description}
-            </MenuItem>
-          ))} */}
-          </TextField>
+          type="number"
+          label="Numero de parcelas"
+          className={css.C__Text}
+          value={this.state.recurrence}
+          onChange={(e) => this.setState({ recurrence: e.target.value })}
+          margin="normal"
+          variant="outlined"
+        />
         }
 
         <TextField
