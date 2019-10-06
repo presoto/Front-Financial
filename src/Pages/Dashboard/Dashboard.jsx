@@ -92,10 +92,7 @@ class Dashboard extends React.Component {
       };
 
       const handleListItemClick = value => {
-        if (value === 'addWallet') {
-          redirect(value)
-        };
-
+        redirect(value)
         onClose(value);
       };
 

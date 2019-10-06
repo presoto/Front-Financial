@@ -2,6 +2,7 @@ import React from 'react';
 import { Redirect } from 'react-router-dom';
 import { Button } from '@material-ui/core';
 import Wallet from './Types/Wallet/Wallet';
+import Activity from './Types/Activity/Activity';
 import { Close, Check } from '@material-ui/icons';
 
 import css from './Transaction.module.sass';
@@ -30,8 +31,13 @@ class Transaction extends React.Component {
     return (
       <div className={css.Container}>
         {this.renderRedirect()}
-        {this.state.params.param === 'addWallet' &&
+        {
+          this.state.params.param === 'addWallet' &&
           <Wallet />
+        }
+        {
+          this.state.params.param !== 'addWallet'
+          && <Activity type={this.state.params.param} />
         }
         <div className={css.C__Footer}>
           <Button
