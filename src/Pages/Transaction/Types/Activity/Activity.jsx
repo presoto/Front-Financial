@@ -14,7 +14,6 @@ class Activity extends React.Component {
       category: [],
       value: '',
       wallet: [],
-
     };
   };
 
