@@ -1,7 +1,7 @@
 import React from 'react';
 import DatePicker from 'react-datepicker'
 
-import { TextField,  } from '@material-ui/core';
+import { TextField, } from '@material-ui/core';
 
 import 'react-datepicker/dist/react-datepicker.css';
 import css from './Activity.module.sass';
@@ -24,16 +24,16 @@ class Activity extends React.Component {
 
   inputDate() {
     return (
-      <div className={ css.hackingDatePicker }>
+      <div className={css.hackingDatePicker}>
         <DatePicker
-          className={ css.C__Date }
+          className={css.C__Date}
           name="date"
-          selected={ this.state.date}
-          onChange={ date => this.setState({date})}
-          minDate={ new Date() }
+          selected={this.state.date}
+          onChange={date => this.setState({ date })}
+          minDate={new Date()}
           dateFormat="dd/MM/yyyy"
           placeholderText="Data da transação"
-          isClearable={ true }
+          isClearable={true}
           withPortal
         />
       </div>
@@ -64,6 +64,39 @@ class Activity extends React.Component {
           margin="normal"
           variant="outlined"
         />
+        <TextField
+          select
+          className={css.C__Text}
+          margin="normal"
+          variant="outlined"
+          // value={this.state.customerType}
+          // onChange={this.handleChange}
+          label="Categoria"
+        >
+          {/* {this.state.customerList.map((state: { id?: number, description?: string }) => (
+            <MenuItem key={state.id} value={state.id}>
+              {state.description}
+            </MenuItem>
+          ))} */}
+        </TextField>
+        {this.props.type === 'addPassive' &&
+          <TextField
+            select
+            className={css.C__Text}
+            margin="normal"
+            variant="outlined"
+            // value={this.state.customerType}
+            // onChange={this.handleChange}
+            label="Parcelas"
+          >
+            {/* {this.state.customerList.map((state: { id?: number, description?: string }) => (
+            <MenuItem key={state.id} value={state.id}>
+              {state.description}
+            </MenuItem>
+          ))} */}
+          </TextField>
+        }
+
         <TextField
           className={css.CF__Field}
           classes={{ root: `${css.CFF_TextFieldRoot}` }}
