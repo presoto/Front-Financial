@@ -1,6 +1,9 @@
 import React from 'react';
-import { TextField } from '@material-ui/core';
+import DatePicker from 'react-datepicker'
 
+import { TextField,  } from '@material-ui/core';
+
+import 'react-datepicker/dist/react-datepicker.css';
 import css from './Activity.module.sass';
 
 class Activity extends React.Component {
@@ -15,7 +18,28 @@ class Activity extends React.Component {
       value: '',
       wallet: [],
     };
+    this.inputDate = this.inputDate.bind(this);
   };
+
+
+  inputDate() {
+    return (
+      <div className={ css.hackingDatePicker }>
+        <DatePicker
+          className={ css.C__Date }
+          name="date"
+          selected={ this.state.date}
+          onChange={ date => this.setState({date})}
+          minDate={ new Date() }
+          dateFormat="dd/MM/yyyy"
+          placeholderText="Data da transação"
+          isClearable={ true }
+          withPortal
+        />
+      </div>
+    )
+  }
+
 
   render() {
     return (
@@ -40,6 +64,15 @@ class Activity extends React.Component {
           margin="normal"
           variant="outlined"
         />
+        <TextField
+          className={css.CF__Field}
+          classes={{ root: `${css.CFF_TextFieldRoot}` }}
+          margin="normal"
+          variant="outlined"
+          id="formatted-dataStart-input"
+          InputProps={{ inputComponent: this.inputDate }}
+        />
+
       </div>
     );
   }
