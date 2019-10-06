@@ -60,7 +60,7 @@ class Activity extends React.Component {
           label="Valor R$"
           className={css.C__Text}
           value={this.state.value}
-          onChange={(e) => this.setState({ valueInitial: e.target.value })}
+          onChange={(e) => this.setState({ value: e.target.value })}
           margin="normal"
           variant="outlined"
         />
