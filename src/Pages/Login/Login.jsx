@@ -73,10 +73,12 @@ class Login extends React.Component {
       password: '',
       id_user: 0,
       redirect: false,
+      newAcount:false,
       userInvalid: false,
       loading: false
     }
     this.validateUser = this.validateUser.bind(this)
+    this.newAcount = this.newAcount.bind(this)
   }
 
   async validateUser() {
@@ -87,16 +89,23 @@ class Login extends React.Component {
     const response = await apiService.get('/login', body, 10000)
 
     response.data.length > 0 ?
-      this.setState({ redirect: true, loading: false, id_user:response.data[0].id  }) :
+      this.setState({ redirect: true, loading: false, id_user: response.data[0].id }) :
       this.setState({ userInvalid: true, loading: false })
 
   }
 
-  renderRedirect = () => {
-    if (this.state.redirect) {
-      return <Redirect to={`/Dashboard/${this.state.id_user}`}  />
-    }
+  newAcount() {
+    this.setState({newAcount: true, redirect:true})
   }
+
+  renderRedirect = () => {
+    if (this.state.redirect && !this.state.newAcount) {
+      return <Redirect to={`/Dashboard/${this.state.id_user}`} />
+    }
+    if (this.state.redirect && this.state.newAcount) {
+      return <Redirect to="/NewAcount" />
+    }
+  } 
 
   render() {
     return (
@@ -131,7 +140,9 @@ class Login extends React.Component {
                 <StyledCheckbox defaultChecked />
                 <p>Manter-se conectado</p>
               </div>
-              <p className={css.LUFO__ForgetPassword}>Ainda não possui uma conta?</p>
+              <button  onClick={this.newAcount}>
+                <p className={css.LUFO__ForgetPassword}>Ainda não possui uma conta?</p>
+              </button>
             </div>
             <Fab
               variant="extended"

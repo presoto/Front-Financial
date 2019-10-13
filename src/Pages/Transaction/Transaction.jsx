@@ -25,8 +25,7 @@ class Transaction extends React.Component {
       return <Redirect to="/dashboard" />
     }
   };
-
-
+  
   render() {
     return (
       <div className={css.Container}>
