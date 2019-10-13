@@ -2,8 +2,12 @@ import React from 'react';
 import { Redirect } from 'react-router-dom'
 
 import { makeStyles } from '@material-ui/core/styles';
-import { TextField, Fab, Checkbox } from '@material-ui/core';
+import { TextField, Fab, Checkbox, Avatar } from '@material-ui/core';
 import { Navigation } from '@material-ui/icons';
+import logo from './../../Assets/Images/icon-finance.png';
+
+import apiService from './../../Services/api.service';
+import Loading from './../../Components/Loading/Loading'
 
 import clsx from 'clsx';
 import css from './Login.module.sass';
@@ -65,35 +69,50 @@ class Login extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
-      user: 'gabrielpresoto@fatec.sp.gov.br',
-      password: '1234567',
+      email: '',
+      password: '',
+      id_user: 0,
       redirect: false,
+      userInvalid: false,
+      loading: false
     }
     this.validateUser = this.validateUser.bind(this)
   }
 
-  validateUser() {
-    if (this.state.user === 'gabrielpresoto@fatec.sp.gov.br' && this.state.password === '1234567') {
-      this.setState({ redirect: true })
-    }
+  async validateUser() {
+    this.setState({ userInvalid: false, loading: true })
+    const { email, password } = this.state
+    const body = { email, password }
+
+    const response = await apiService.get('/login', body, 10000)
+
+    response.data.length > 0 ?
+      this.setState({ redirect: true, loading: false, id_user:response.data[0].id  }) :
+      this.setState({ userInvalid: true, loading: false })
+
   }
 
   renderRedirect = () => {
     if (this.state.redirect) {
-      return <Redirect to='/Dashboard' />
+      return <Redirect to={`/Dashboard/${this.state.id_user}`}  />
     }
   }
 
   render() {
     return (
       <div className={css.Login}>
+        <Loading visible={this.state.loading} />
         {this.renderRedirect()}
         <div className={css.L__User}>
-          <h4 className={css.LU__Welcome}>Bem vindo de volta, <strong>Gabriel</strong> !</h4>
+          <Avatar alt={this.state.userName} src={logo} />
+
+          <h4 className={css.LU__Welcome}>Bem vindo ao seu</h4>
+          <h4 className={css.LU__Welcome}><strong>Gerenciador Financeiro</strong> !</h4>
+
           <div className={css.LU__Form}>
             <TextField
-              value={this.state.user}
-              onChange={(e) => this.setState({ user: e.target.value })}
+              value={this.state.email}
+              onChange={(e) => this.setState({ email: e.target.value })}
               variant="filled"
               label="Usuario"
             />
@@ -105,16 +124,20 @@ class Login extends React.Component {
               onChange={(e) => this.setState({ password: e.target.value })}
             />
             <div className={css.LUF__Options}>
+              {this.state.userInvalid &&
+                <p className={css.LUFO__InvalidUser}>Usuario ou senha invalidos</p>
+              }
               <div className={css.LUFO__Check}>
                 <StyledCheckbox defaultChecked />
                 <p>Manter-se conectado</p>
               </div>
-              <p className={css.LUFO__ForgetPassword}>Esqueceu sua senha?</p>
+              <p className={css.LUFO__ForgetPassword}>Ainda não possui uma conta?</p>
             </div>
             <Fab
               variant="extended"
               aria-label="delete"
               className={css.fab}
+              disabled={!(this.state.email && this.state.password)}
               onClick={this.validateUser}>
               <Navigation className={css.extendedIcon} />
               Entrar
