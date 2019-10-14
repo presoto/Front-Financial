@@ -1,5 +1,5 @@
 import React from 'react';
-import DatePicker from 'react-datepicker'
+import DatePicker from 'react-datepicker';
 
 import { TextField, } from '@material-ui/core';
 
@@ -30,7 +30,6 @@ class Activity extends React.Component {
           name="date"
           selected={this.state.date}
           onChange={date => this.setState({ date })}
-          minDate={new Date()}
           dateFormat="dd/MM/yyyy"
           placeholderText="Data da transação"
           isClearable={true}

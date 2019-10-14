@@ -13,7 +13,13 @@ const apiServices = {
         body
       },
     })
-  }
+  },
+
+  async post(path, body) {
+    return await axios.post(`${host}${path}`, body ,{ timeout: 10000 })
+  },
+
 };
+
 
 export default apiServices;
