@@ -20,9 +20,15 @@ class NewAcount extends React.Component {
       password: '',
       email: '',
       date_birth: '',
+
+      descriptionWallet: '',
+      valueWallet: '',
+
       redirect: false,
+      registerSuccess: false,
       step: 0,
       id_user: undefined,
+
       loading: false,
       erroRegisterUser: false
     }
@@ -48,9 +54,14 @@ class NewAcount extends React.Component {
   }
 
   renderRedirect() {
-    if (this.state.redirect) {
+    const { redirect, registerSuccess, id_user } = this.state;
+
+    if (redirect && !registerSuccess) {
       return <Redirect to='/' />
-    }
+    };
+    if (redirect && registerSuccess) {
+      return <Redirect to={`/Dashboard/${id_user}`} />
+    };
   }
 
   async next() {
@@ -66,6 +77,15 @@ class NewAcount extends React.Component {
       ).catch(err => this.setState({ erroRegisterUser: true, loading: false })
       )
     };
+    if (this.state.step === 1) {
+      await apiService.post('/wallet', {
+        name: this.state.descriptionWallet,
+        balance: this.state.valueWallet,
+        id_user: this.state.id_user,
+      }).then(res => this.setState({ registerSuccess: true, redirect: true, loading: false })
+      ).catch(err => this.setState({ erroRegisterUser: true, loading: false })
+      )
+    }
   };
 
   render() {
@@ -136,10 +156,44 @@ class NewAcount extends React.Component {
             </div>
           </div>
         }
-        { this.state.step === 1 &&
-        <div>
-          agora vamos cadastrar uma cateira
-        </div> 
+        {this.state.step === 1 &&
+          <div className={css.C__User}>
+            <div className={css.CU__Title}>
+              Agora vamos cadastrar uma carteira.
+            </div>
+            <div className={css.CU__Form}>
+              <TextField
+                label="Nome da carteira"
+                className={css.C__Text}
+                value={this.state.descriptionWallet}
+                onChange={(e) => this.setState({ descriptionWallet: e.target.value })}
+                margin="normal"
+                variant="outlined"
+              />
+              <TextField
+                label="Saldo inicial"
+                type="number"
+                className={css.C__Text}
+                value={this.state.valueWallet}
+                onChange={(e) => this.setState({ valueWallet: e.target.value })}
+                margin="normal"
+                variant="outlined"
+              />
+            </div>
+            <div className={css.CU__Footer}>
+              <Button
+                color="primary"
+                variant="contained"
+                disabled={(
+                  !this.state.valueWallet || !this.state.descriptionWallet
+                )}
+                onClick={this.next}
+              >
+                Avançar
+                <ArrowForwardIos />
+              </Button>
+            </div>
+          </div>
         }
       </div >
     );
