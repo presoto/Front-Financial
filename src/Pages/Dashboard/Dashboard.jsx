@@ -24,6 +24,8 @@ import {
   Remove
 } from '@material-ui/icons';
 
+import apiService from './../../Services/api.service';
+
 import avatarPicture from './../../Assets/Images/user.png';
 import css from './Dashboard.module.sass';
 
@@ -31,9 +33,10 @@ class Dashboard extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
+      idUser: this.props.match.params.id,
       salutation: '',
-      userName: 'Gabriel',
-      wallet: [{ name: 'santander', value: 550 }, { name: 'nubank', value: -200 }],
+      userName: '',
+      wallet: [{ name: '', value: 0 }, { name: '', value: 0 }],
       valueTab: 0,
       open: false,
       selectedValue: false,
@@ -48,7 +51,10 @@ class Dashboard extends React.Component {
     }
   };
 
-  componentDidMount() {
+  async componentDidMount() {
+    const responseUser = await apiService.get(`/users/id?body=${this.state.idUser}`)
+
+    this.setState({ userName: responseUser.data[0].name })
     this.getSalutation();
   };
 
@@ -169,7 +175,12 @@ class Dashboard extends React.Component {
               </div>
             </div>
             <div className={css.C__Add}>
-              <Fab color="primary" aria-label="add" onClick={this.handleClickOpen} >
+              <Fab
+                color="primary"
+                classes={{ root: `${css.CA__Button}` }}
+                aria-label="add"
+                onClick={this.handleClickOpen}
+              >
                 <Add />
               </Fab>
             </div>
