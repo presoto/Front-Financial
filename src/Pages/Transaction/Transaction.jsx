@@ -16,16 +16,18 @@ class Transaction extends React.Component {
       date: '28/08/2019',
       recurrence: 0,
       params: this.props.match.params,
+      category: [],
       redirect: false,
     }
   }
 
   renderRedirect = () => {
     if (this.state.redirect) {
-      return <Redirect to="/dashboard" />
+      return <Redirect to="/" />
     }
   };
-  
+
+
   render() {
     return (
       <div className={css.Container}>

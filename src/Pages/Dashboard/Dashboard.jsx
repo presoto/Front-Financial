@@ -36,11 +36,13 @@ class Dashboard extends React.Component {
       idUser: this.props.match.params.id,
       salutation: '',
       userName: '',
-      wallet: [{ name: '', value: 0 }, { name: '', value: 0 }],
+      wallet: [{}],
       valueTab: 0,
       open: false,
       selectedValue: false,
       redirect: false,
+      passives30: 0,
+      actives30: 0,
       params: ''
     }
   };
@@ -52,9 +54,17 @@ class Dashboard extends React.Component {
   };
 
   async componentDidMount() {
-    const responseUser = await apiService.get(`/users/id?body=${this.state.idUser}`)
-
-    this.setState({ userName: responseUser.data[0].name })
+    const responseUser = await apiService.get(`/users/id?body=${this.state.idUser}`);
+    const responseWallet = await apiService.get(`/wallet/id?body=${this.state.idUser}`);
+    await this.setState({
+      userName: responseUser.data[0].name,
+      wallet: [{
+        id: responseWallet.data[0].id,
+        name: responseWallet.data[0].name,
+        value: responseWallet.data[0].balance
+      }]
+    })
+    // const responseEconomic = await apiService.get(`/economic_balance/id?body=${this.state.wallet[0].id}`);
     this.getSalutation();
   };
 
@@ -167,7 +177,7 @@ class Dashboard extends React.Component {
             </div>
             <div className={css.C__Wallet}>
               <h2 className={css.CW__Name}>{this.state.wallet[0].name}</h2>
-              <h4 className={css.CW__Value}>R$ 1250</h4>
+              <h4 className={css.CW__Value}>R$ {this.state.wallet[0].value}</h4>
               <p className={css.CW__Lastdays}>ultimos 30 dias</p>
               <div className={css.CW__Movement}>
                 <p className={css.CW__InputValues} >Entradas: R$1450</p>

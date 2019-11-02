@@ -1,7 +1,8 @@
 import React from 'react';
 import DatePicker from 'react-datepicker';
 
-import { TextField, } from '@material-ui/core';
+import { TextField, MenuItem} from '@material-ui/core';
+import apiService from './../../../../Services/api.service';
 
 import 'react-datepicker/dist/react-datepicker.css';
 import css from './Activity.module.sass';
@@ -21,6 +22,10 @@ class Activity extends React.Component {
     this.inputDate = this.inputDate.bind(this);
   };
 
+  async componentDidMount() {
+    const responseCategory = await apiService.get('/category');
+    this.setState({category: responseCategory.data})
+  };
 
   inputDate() {
     return (
