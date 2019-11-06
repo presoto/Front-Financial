@@ -18,9 +18,10 @@ import { Redirect } from 'react-router-dom';
 import {
   Home,
   List,
-  GraphicEq,
+  // GraphicEq,
   Add,
-  CreditCard,
+  // CreditCard,
+  MonetizationOn,
   Remove
 } from '@material-ui/icons';
 
@@ -43,13 +44,15 @@ class Dashboard extends React.Component {
       redirect: false,
       passives30: 0,
       actives30: 0,
-      params: ''
+      params: '',
+      balance: [],
+      category: []
     }
   };
 
   renderRedirect = () => {
     if (this.state.redirect) {
-      return <Redirect to={`/transaction/${this.state.params}`} />
+      return <Redirect to={`/transaction/${this.state.params}/${this.state.idUser}`} />
     }
   };
 
@@ -64,7 +67,15 @@ class Dashboard extends React.Component {
         value: responseWallet.data[0].balance
       }]
     })
-    // const responseEconomic = await apiService.get(`/economic_balance/id?body=${this.state.wallet[0].id}`);
+    const responseEconomic = await apiService.get(`/balance_twenty/id?body=${this.state.wallet[0].id}`);
+    const responseBalance = await apiService.get(`/economic_balance/id?body=${this.state.wallet[0].id}`);
+    const responseCategory = await apiService.get(`/category`);
+    await this.setState({
+      passives30: responseEconomic.data.passive,
+      actives30: responseEconomic.data.ative,
+      balance: responseBalance.data,
+      category: responseCategory.data
+    })
     this.getSalutation();
   };
 
@@ -117,14 +128,14 @@ class Dashboard extends React.Component {
         <Dialog onClose={handleClose} aria-labelledby="simple-dialog-title" open={open}>
           <DialogTitle classes={{ root: `${css.ListCore}` }} id="simple-dialog-title">Oque vamos adicionar ?</DialogTitle>
           <ListCore classes={{ root: `${css.ListCore}` }}>
-            <ListItem button onClick={() => handleListItemClick('addWallet')}>
+            {/* <ListItem button onClick={() => handleListItemClick('addWallet')}>
               <ListItemAvatar>
                 <Avatar>
                   <CreditCard />
                 </Avatar>
               </ListItemAvatar>
               <ListItemText primary="Nova carteira" />
-            </ListItem>
+            </ListItem> */}
             <ListItem button onClick={() => handleListItemClick('addActive')}>
               <ListItemAvatar>
                 <Avatar>
@@ -180,8 +191,10 @@ class Dashboard extends React.Component {
               <h4 className={css.CW__Value}>R$ {this.state.wallet[0].value}</h4>
               <p className={css.CW__Lastdays}>ultimos 30 dias</p>
               <div className={css.CW__Movement}>
-                <p className={css.CW__InputValues} >Entradas: R$1450</p>
-                <p className={css.CW__OutputValues}>Despesas: R$200</p>
+                <p className={css.CW__InputValues} >Entradas: R$ {this.state.actives30}</p>
+                <p className={css.CW__OutputValues}>
+                  Despesas: R$ {this.state.passives30.toString().replace('-', '')}
+                </p>
               </div>
             </div>
             <div className={css.C__Add}>
@@ -203,7 +216,24 @@ class Dashboard extends React.Component {
           </div>
         </TabPanel>
         <TabPanel value={this.state.valueTab} index={1}>
-          <RetangleInfo />
+          {!this.state.balance.length &&
+            <div className={css.balance}>
+              <p className={css.LC_Text}>Adicione uma atividade para listamos aqui!</p>
+              <MonetizationOn className={css.LC_Icon} />
+            </div>
+          }
+          {this.state.balance.map((b, i) => {
+            const type = this.state.category.find((c) => {
+              if (c.id === b.idDefaultCategory) {
+                return c.type
+              }
+            })
+            return <RetangleInfo
+              key={i}
+              balance={b}
+              type={type}
+            />
+          })}
         </TabPanel>
         <TabPanel value={this.state.valueTab} index={2}>
           Nem aqui
@@ -219,7 +249,7 @@ class Dashboard extends React.Component {
           >
             <Tab icon={<Home />} label="Inicio" classes={{ root: `${css.CT__Itens}` }} />
             <Tab icon={<List />} label="Recentes" classes={{ root: `${css.CT__Itens}` }} />
-            <Tab icon={<GraphicEq />} label="Analíse" classes={{ root: `${css.CT__Itens}` }} />
+            {/* <Tab icon={<GraphicEq />} label="Analíse" classes={{ root: `${css.CT__Itens}` }} /> */}
           </Tabs>
         </div>
       </div>
