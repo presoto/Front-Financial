@@ -188,12 +188,34 @@ class Dashboard extends React.Component {
             </div>
             <div className={css.C__Wallet}>
               <h2 className={css.CW__Name}>{this.state.wallet[0].name}</h2>
-              <h4 className={css.CW__Value}>R$ {this.state.wallet[0].value}</h4>
+              <h4 className={css.CW__Value}>{Number(this.state.wallet[0].value)
+                .toLocaleString("pt-BR",
+                  {
+                    minimumFractionDigits: 2,
+                    style: 'currency',
+                    currency: 'BRL'
+                  }
+                )}
+              </h4>
               <p className={css.CW__Lastdays}>ultimos 30 dias</p>
               <div className={css.CW__Movement}>
-                <p className={css.CW__InputValues} >Entradas: R$ {this.state.actives30}</p>
+                <p className={css.CW__InputValues} >Entradas: {this.state.actives30
+                  .toLocaleString("pt-BR",
+                    {
+                      minimumFractionDigits: 2,
+                      style: 'currency',
+                      currency: 'BRL'
+                    }
+                  )}</p>
                 <p className={css.CW__OutputValues}>
-                  Despesas: R$ {this.state.passives30.toString().replace('-', '')}
+                  Despesas: {Number(this.state.passives30.toString().replace('-', ''))
+                    .toLocaleString("pt-BR",
+                      {
+                        minimumFractionDigits: 2,
+                        style: 'currency',
+                        currency: 'BRL'
+                      })
+                  }
                 </p>
               </div>
             </div>
