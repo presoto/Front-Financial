@@ -18,9 +18,9 @@ import { Redirect } from 'react-router-dom';
 import {
   Home,
   List,
-  // GraphicEq,
+  GraphicEq,
   Add,
-  // CreditCard,
+  CreditCard,
   MonetizationOn,
   Remove
 } from '@material-ui/icons';
@@ -128,14 +128,14 @@ class Dashboard extends React.Component {
         <Dialog onClose={handleClose} aria-labelledby="simple-dialog-title" open={open}>
           <DialogTitle classes={{ root: `${css.ListCore}` }} id="simple-dialog-title">Oque vamos adicionar ?</DialogTitle>
           <ListCore classes={{ root: `${css.ListCore}` }}>
-            {/* <ListItem button onClick={() => handleListItemClick('addWallet')}>
+            <ListItem button onClick={() => handleListItemClick('addWallet')}>
               <ListItemAvatar>
                 <Avatar>
                   <CreditCard />
                 </Avatar>
               </ListItemAvatar>
               <ListItemText primary="Nova carteira" />
-            </ListItem> */}
+            </ListItem>
             <ListItem button onClick={() => handleListItemClick('addActive')}>
               <ListItemAvatar>
                 <Avatar>
@@ -271,7 +271,7 @@ class Dashboard extends React.Component {
           >
             <Tab icon={<Home />} label="Inicio" classes={{ root: `${css.CT__Itens}` }} />
             <Tab icon={<List />} label="Recentes" classes={{ root: `${css.CT__Itens}` }} />
-            {/* <Tab icon={<GraphicEq />} label="Analíse" classes={{ root: `${css.CT__Itens}` }} /> */}
+            <Tab icon={<GraphicEq />} label="Analíse" classes={{ root: `${css.CT__Itens}` }} />
           </Tabs>
         </div>
       </div>

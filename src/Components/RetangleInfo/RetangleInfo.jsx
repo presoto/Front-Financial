@@ -1,7 +1,10 @@
 import React from 'react';
 import moment from 'moment';
 
-import { TrendingUp, TrendingDown } from '@material-ui/icons/'
+import apiService from './../../Services/api.service';
+
+
+import { TrendingUp, TrendingDown, DeleteForever } from '@material-ui/icons/'
 
 import css from './RetangleInfo.module.sass';
 
@@ -28,7 +31,10 @@ const RetangloInfo = (props) => (
                             })
                     }</h5>
                 </div>
-                <p>{moment().format('LL', props.balance.updatedAt)}</p>
+                <div className={css.C__Footer}>
+                    <p>{moment().format('LL', props.balance.updatedAt)}</p>
+                    <DeleteForever className={css.CF__Icon} onClick={() => alert('a')} />
+                </div>
             </div>
         </div>
     </>
