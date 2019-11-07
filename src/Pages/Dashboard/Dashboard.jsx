@@ -1,5 +1,7 @@
 import React from 'react';
-import RetangleInfo from '../../Components/RetangleInfo/RetangleInfo'
+import RetangleInfo from '../../Components/RetangleInfo/RetangleInfo';
+import Graphic from '../../Components/Graphic/Graphic';
+
 import {
   Tabs,
   Tab,
@@ -128,14 +130,14 @@ class Dashboard extends React.Component {
         <Dialog onClose={handleClose} aria-labelledby="simple-dialog-title" open={open}>
           <DialogTitle classes={{ root: `${css.ListCore}` }} id="simple-dialog-title">Oque vamos adicionar ?</DialogTitle>
           <ListCore classes={{ root: `${css.ListCore}` }}>
-            <ListItem button onClick={() => handleListItemClick('addWallet')}>
+            {/* <ListItem button onClick={() => handleListItemClick('addWallet')}>
               <ListItemAvatar>
                 <Avatar>
                   <CreditCard />
                 </Avatar>
               </ListItemAvatar>
               <ListItemText primary="Nova carteira" />
-            </ListItem>
+            </ListItem> */}
             <ListItem button onClick={() => handleListItemClick('addActive')}>
               <ListItemAvatar>
                 <Avatar>
@@ -258,7 +260,7 @@ class Dashboard extends React.Component {
           })}
         </TabPanel>
         <TabPanel value={this.state.valueTab} index={2}>
-          Nem aqui
+          <Graphic />
         </TabPanel>
         <div className={css.C__Tab}>
           <Tabs
