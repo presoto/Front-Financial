@@ -19,6 +19,10 @@ const apiServices = {
     return await axios.post(`${host}${path}`, body ,{ timeout: 10000 })
   },
 
+  async delete(path, body) {
+    return await axios.delete(`${host}${path}`, body ,{ timeout: 10000 })
+  },
+
 };
 
 

@@ -12,10 +12,7 @@ import {
   Legend
 } from 'recharts';
 import calculo from './../../Assets/Images/calculo.png';
-
-import {
-  ArrowUpwardOutlined
-} from '@material-ui/icons';
+import apiService from './../../Services/api.service';
 
 import css from './Graphic.module.sass';
 
@@ -25,20 +22,44 @@ class Graphic extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
-      periodo: 0
+      periodo: 0,
+      category: [],
+      responseGraphic: []
     }
     this.handleChange = this.handleChange.bind(this);
+    this.graphicValidate = this.graphicValidate.bind(this);
   }
 
-  handleChange(e) {
+  async componentDidMount() {
+    const category = await apiService.get('/category');
+    this.setState(category)
+  }
+
+  async handleChange(e) {
     const { name, value } = e.target
     const change = []
     change[name] = value
-
+    if (name === 'periodo') {
+      await this.setState(change)
+      const responseGraphic = await apiService
+        .get(`/balance/id?id=${this.props.wallet[0].id}&days=${this.state.periodo}`, 10000)
+      this.setState({ responseGraphic })
+      this.graphicValidate()
+      return
+    }
     this.setState(change)
   }
 
-
+  graphicValidate() {
+    console.log(this.state.responseGraphic.data)
+    this.state.responseGraphic.data.filter((g) =>
+      this.state.category.filter((c) => {
+        if (g.idDefaultCategory === c.id) {
+          return console.log(c.id)
+        }
+      })
+    )
+  }
   render() {
     // gera uma cor aleatória em hexadecimal
     function gera_cor() {
@@ -122,7 +143,7 @@ class Graphic extends React.Component {
       },
       {
         description: 'Completo',
-        value: 999
+        value: 9999
       },
     ]
 
@@ -144,7 +165,7 @@ class Graphic extends React.Component {
           </TextField>
         </div>
         {this.state.periodo === 0 &&
-            <img className={css.Img} src={calculo} alt="calculo" width="300px" height="500px"/>
+          <img className={css.Img} src={calculo} alt="calculo" width="300px" height="500px" />
         }
         {this.state.periodo !== 0 &&
           <>

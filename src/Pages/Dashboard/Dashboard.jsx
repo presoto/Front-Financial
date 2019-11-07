@@ -260,7 +260,7 @@ class Dashboard extends React.Component {
           })}
         </TabPanel>
         <TabPanel value={this.state.valueTab} index={2}>
-          <Graphic />
+          <Graphic wallet={this.state.wallet} />
         </TabPanel>
         <div className={css.C__Tab}>
           <Tabs
