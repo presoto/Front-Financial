@@ -11,8 +11,9 @@ import {
   Tooltip,
   Legend
 } from 'recharts';
-import calculo from './../../Assets/Images/calculo.png';
+// import calculo from './../../Assets/Images/calculo.png';
 import apiService from './../../Services/api.service';
+import Loading from './../../Components/Loading/Loading';
 
 import css from './Graphic.module.sass';
 
@@ -27,10 +28,12 @@ class Graphic extends React.Component {
       responseGraphic: [],
       receita: 0,
       despesa: 0,
-      data2: []
+      data2: [],
+      loading: false
     }
     this.handleChange = this.handleChange.bind(this);
     this.graphicValidate = this.graphicValidate.bind(this);
+    this.getRandomColor = this.getRandomColor.bind(this);
   }
 
   async componentDidMount() {
@@ -43,6 +46,7 @@ class Graphic extends React.Component {
     const change = []
     change[name] = value
     if (name === 'periodo') {
+    this.setState({loading: true})
       await this.setState(change)
       const responseGraphic = await apiService
         .get(`/balance/id?id=${this.props.wallet[0].id}&days=${this.state.periodo}`, 10000)
@@ -53,6 +57,14 @@ class Graphic extends React.Component {
     this.setState(change)
   }
 
+   getRandomColor() {
+    var letters = '0123456789ABCDEF';
+    var color = '#';
+    for (var i = 0; i < 6; i++) {
+      color += letters[Math.floor(Math.random() * 16)];
+    }
+    return color;
+  }
   graphicValidate() {
     const { responseGraphic, category } = this.state
     responseGraphic.data.filter((g) =>
@@ -69,96 +81,26 @@ class Graphic extends React.Component {
       } else {
         this.setState({ despesa: Number((this.state.despesa + r.value).toString().replace('-', '')) })
       }
+      if (this.state.responseGraphic.length !== 0) {
+        let data2 = []
+        this.state.responseGraphic.data.forEach((e) => 
+          data2.push({
+            name: e.catName,
+            uv: e.value,
+            fill: this.getRandomColor()
+          })
+        )
+  
+        this.setState({ data2, loading: false })
+      }
     })
   }
   render() {
-    // gera uma cor aleatória em hexadecimal
-    function gera_cor() {
-      var hexadecimais = '0123456789ABCDEF';
-      var cor = '#';
 
-      // Pega um número aleatório no array acima
-      for (var i = 0; i < 6; i++) {
-        //E concatena à variável cor
-        cor += hexadecimais[Math.floor(Math.random() * 16)];
-      }
-      return cor;
-    }
     const data = [
       { name: 'Receitas', Receitas: this.state.receita, amt: 9900 },
       { name: 'Despesas', Despesas: this.state.despesa, amt: 9900 },
     ];
-
-    if (this.state.responseGraphic.length !== 0) {
-
-console.log('aqui: ', this.state.responseGraphic.data.map((e) => console.log(e)
-  // e.name = e.catActive
-  // e.uv = e.value
-  // e.fill = e.catActive === 'A' ? 'green' : 'red'
-))
-
-
-      // this.setState({
-      //   data2: this.state.responseGraphic.data.map((e) => {
-      //     e.name = e.catActive
-      //     e.uv = e.value
-      //     e.fill = e.catActive === 'A' ? 'green' : 'red'
-      //   })
-      // })
-    }
-
-
-    // catActive: "A"
-    // catName: "Bonus"
-    // createdAt: "2019-11-07T10:35:31.394Z"
-    // date: "2019-11-07T03:00:00.000Z"
-    // id: 61
-    // idCategory: null
-    // idDefaultCategory: 2
-    // idWallet: 8
-    // name: "hr extra"
-    // recurrence: 1
-    // totalValue: 900
-    // updatedAt: "2019-11-07T10:35:31.394Z"
-    // value: 900
-
-    const data3 = [
-      {
-        "name": "luz",
-        "uv": 100,
-        "fill": gera_cor()
-      },
-      {
-        "name": "agua",
-        "uv": 100,
-        "fill": gera_cor()
-      },
-      {
-        "name": "salario",
-        "uv": 100,
-        "fill": gera_cor()
-      },
-      {
-        "name": "outros",
-        "uv": 800,
-        "fill": gera_cor()
-      },
-      {
-        "name": "bonus",
-        "uv": 200,
-        "fill": gera_cor()
-      },
-      {
-        "name": "roupas",
-        "uv": 100,
-        "fill": gera_cor()
-      },
-      {
-        "name": "financiamento",
-        "uv": 300,
-        "fill": gera_cor()
-      }
-    ]
 
     const periodo = [
       {
@@ -193,6 +135,7 @@ console.log('aqui: ', this.state.responseGraphic.data.map((e) => console.log(e)
 
     return (
       <div className={css.Content}>
+        <Loading visible={this.state.loading} />
         <div className={css.C__Filter}>
           <h1 className={css.C__Title}>Análise grafica</h1>
           <TextField
