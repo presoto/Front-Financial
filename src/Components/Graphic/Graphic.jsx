@@ -90,8 +90,9 @@ class Graphic extends React.Component {
             fill: this.getRandomColor()
           })
         )
-  
-        this.setState({ data2, loading: false })
+          setTimeout(() => {
+            this.setState({ data2, loading: false })
+          }, 1000);
       }
     })
   }
@@ -137,7 +138,7 @@ class Graphic extends React.Component {
       <div className={css.Content}>
         <Loading visible={this.state.loading} />
         <div className={css.C__Filter}>
-          <h1 className={css.C__Title}>Análise grafica</h1>
+          <h1 className={css.C__Title}>Análise gráfica</h1>
           <TextField
             select
             className={css.CF__Text}

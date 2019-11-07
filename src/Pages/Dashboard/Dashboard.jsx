@@ -1,6 +1,7 @@
 import React from 'react';
 import RetangleInfo from '../../Components/RetangleInfo/RetangleInfo';
 import Graphic from '../../Components/Graphic/Graphic';
+import Loading from './../../Components/Loading/Loading';
 
 import {
   Tabs,
@@ -22,9 +23,11 @@ import {
   List,
   GraphicEq,
   Add,
-  // CreditCard,
+  CreditCard,
   MonetizationOn,
-  Remove
+  Remove,
+  ArrowLeft,
+  ArrowRight
 } from '@material-ui/icons';
 
 import apiService from './../../Services/api.service';
@@ -48,7 +51,8 @@ class Dashboard extends React.Component {
       actives30: 0,
       params: '',
       balance: [],
-      category: []
+      category: [],
+      loading: true
     }
   };
 
@@ -76,7 +80,8 @@ class Dashboard extends React.Component {
       passives30: responseEconomic.data.passive,
       actives30: responseEconomic.data.ative,
       balance: responseBalance.data,
-      category: responseCategory.data
+      category: responseCategory.data,
+      loading: false
     })
     this.getSalutation();
   };
@@ -130,14 +135,14 @@ class Dashboard extends React.Component {
         <Dialog onClose={handleClose} aria-labelledby="simple-dialog-title" open={open}>
           <DialogTitle classes={{ root: `${css.ListCore}` }} id="simple-dialog-title">Oque vamos adicionar ?</DialogTitle>
           <ListCore classes={{ root: `${css.ListCore}` }}>
-            {/* <ListItem button onClick={() => handleListItemClick('addWallet')}>
+            <ListItem disabled button onClick={() => handleListItemClick('addWallet')}>
               <ListItemAvatar>
                 <Avatar>
                   <CreditCard />
                 </Avatar>
               </ListItemAvatar>
               <ListItemText primary="Nova carteira" />
-            </ListItem> */}
+            </ListItem>
             <ListItem button onClick={() => handleListItemClick('addActive')}>
               <ListItemAvatar>
                 <Avatar>
@@ -178,6 +183,7 @@ class Dashboard extends React.Component {
 
     return (
       <div className={css.Container} >
+        <Loading visible={this.state.loading}/>
         {this.renderRedirect()}
         <TabPanel value={this.state.valueTab} index={0}>
           <div className={css.Home}>
@@ -201,6 +207,10 @@ class Dashboard extends React.Component {
                   }
                 )}
               </h4>
+              <div className={css.CW__Icon}>
+                <button disabled ><ArrowLeft fontSize="large" /></button>
+                <button disabled ><ArrowRight fontSize="large"/></button>
+              </div>
               <p className={css.CW__Lastdays}>ultimos 30 dias</p>
               <div className={css.CW__Movement}>
                 <p className={css.CW__InputValues} >Entradas: {this.state.actives30
