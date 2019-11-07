@@ -24,7 +24,10 @@ class Graphic extends React.Component {
     this.state = {
       periodo: 0,
       category: [],
-      responseGraphic: []
+      responseGraphic: [],
+      receita: 0,
+      despesa: 0,
+      data2: []
     }
     this.handleChange = this.handleChange.bind(this);
     this.graphicValidate = this.graphicValidate.bind(this);
@@ -32,7 +35,7 @@ class Graphic extends React.Component {
 
   async componentDidMount() {
     const category = await apiService.get('/category');
-    this.setState(category)
+    this.setState({ category: category.data })
   }
 
   async handleChange(e) {
@@ -43,7 +46,7 @@ class Graphic extends React.Component {
       await this.setState(change)
       const responseGraphic = await apiService
         .get(`/balance/id?id=${this.props.wallet[0].id}&days=${this.state.periodo}`, 10000)
-      this.setState({ responseGraphic })
+      this.setState({ responseGraphic, receita: 0, despesa: 0 })
       this.graphicValidate()
       return
     }
@@ -51,14 +54,22 @@ class Graphic extends React.Component {
   }
 
   graphicValidate() {
-    console.log(this.state.responseGraphic.data)
-    this.state.responseGraphic.data.filter((g) =>
-      this.state.category.filter((c) => {
+    const { responseGraphic, category } = this.state
+    responseGraphic.data.filter((g) =>
+      category.map((c) => {
         if (g.idDefaultCategory === c.id) {
-          return console.log(c.id)
+          g.catName = c.name
+          g.catActive = c.type
         }
       })
     )
+    responseGraphic.data.forEach((r) => {
+      if (r.catActive === 'A') {
+        this.setState({ receita: this.state.receita + r.value })
+      } else {
+        this.setState({ despesa: Number((this.state.despesa + r.value).toString().replace('-', '')) })
+      }
+    })
   }
   render() {
     // gera uma cor aleatória em hexadecimal
@@ -74,11 +85,44 @@ class Graphic extends React.Component {
       return cor;
     }
     const data = [
-      { name: 'Receitas', Receitas: 2400, amt: 2400 },
-      { name: 'Despesas', Despesas: 1398, amt: 2210 },
+      { name: 'Receitas', Receitas: this.state.receita, amt: 9900 },
+      { name: 'Despesas', Despesas: this.state.despesa, amt: 9900 },
     ];
 
-    const data2 = [
+    if (this.state.responseGraphic.length !== 0) {
+
+console.log('aqui: ', this.state.responseGraphic.data.map((e) => console.log(e)
+  // e.name = e.catActive
+  // e.uv = e.value
+  // e.fill = e.catActive === 'A' ? 'green' : 'red'
+))
+
+
+      // this.setState({
+      //   data2: this.state.responseGraphic.data.map((e) => {
+      //     e.name = e.catActive
+      //     e.uv = e.value
+      //     e.fill = e.catActive === 'A' ? 'green' : 'red'
+      //   })
+      // })
+    }
+
+
+    // catActive: "A"
+    // catName: "Bonus"
+    // createdAt: "2019-11-07T10:35:31.394Z"
+    // date: "2019-11-07T03:00:00.000Z"
+    // id: 61
+    // idCategory: null
+    // idDefaultCategory: 2
+    // idWallet: 8
+    // name: "hr extra"
+    // recurrence: 1
+    // totalValue: 900
+    // updatedAt: "2019-11-07T10:35:31.394Z"
+    // value: 900
+
+    const data3 = [
       {
         "name": "luz",
         "uv": 100,
@@ -165,7 +209,11 @@ class Graphic extends React.Component {
           </TextField>
         </div>
         {this.state.periodo === 0 &&
-          <img className={css.Img} src={calculo} alt="calculo" width="300px" height="500px" />
+          <>
+            <h4 className={css.C__H4}>Para gerar o relatorio primeiro você deve selecionar um filtro.</h4>
+            <h5 className={css.C__H5}>Atenção: O grafico é plotado com base nas suas atividades cadastradas juntamente filtradas pelo periodo selecionado.</h5>
+          </>
+          // <img className={css.Img} src={calculo} alt="calculo" width="100px" height="100px" />
         }
         {this.state.periodo !== 0 &&
           <>
@@ -184,7 +232,7 @@ class Graphic extends React.Component {
               height={250}
               innerRadius="10%"
               outerRadius="80%"
-              data={data2}
+              data={this.state.data2}
               startAngle={180}
               endAngle={0}
             >

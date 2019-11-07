@@ -35,7 +35,9 @@ const RetangloInfo = (props) => (
                     <p>{moment().format('LL', props.balance.updatedAt)}</p>
                     <DeleteForever className={css.CF__Icon} onClick={() =>
                         apiService.delete(`/balance/id?idWallet=${props.balance.idWallet}&id=
-                     ${props.balance.id}&action=${props.type.type}&value=${Number(props.balance.value.toString().replace('-', ''))}`, 10000)
+                     ${props.balance.id}&action=${props.type.type}&value=${Number(props.balance.value.toString().replace('-', ''))}`, 10000).then(
+                        window.location.href = `/Dashboard/${props.idUser}`
+                     )
                     } />
                 </div>
             </div>

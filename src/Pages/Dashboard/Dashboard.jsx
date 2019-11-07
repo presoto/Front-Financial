@@ -22,7 +22,7 @@ import {
   List,
   GraphicEq,
   Add,
-  CreditCard,
+  // CreditCard,
   MonetizationOn,
   Remove
 } from '@material-ui/icons';
@@ -185,6 +185,8 @@ class Dashboard extends React.Component {
               <div className={css.HU__Title}>
                 <h1 className={css.HUT__Salutation}>{this.state.salutation},</h1>
                 <h4 className={css.HUT__Name}>{this.state.userName}</h4>
+                <p className={css.HUT__Logof} onClick={() => window.location.href = '/'}>
+                  Você não é {this.state.userName}? Sair</p>
               </div>
               <Avatar alt={this.state.userName} src={avatarPicture} classes={{ root: `${css.HU__Picture}` }} />
             </div>
@@ -255,6 +257,7 @@ class Dashboard extends React.Component {
             return <RetangleInfo
               key={i}
               balance={b}
+              idUser={this.state.idUser}
               type={type}
             />
           })}
